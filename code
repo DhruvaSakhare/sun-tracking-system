@@ -1,0 +1,78 @@
+#include <Servo.h>
+
+void UpDown();
+void LeftRight();
+Servo servo1;
+Servo servo2;
+void setup() 
+  {
+    servo1.attach(9);
+    servo2.attach(10); 
+
+    servo1.write(90); 
+    servo2.write(90); 
+  }
+
+void loop()
+  {
+     int sensorTL = analogRead(A0);
+     int sensorBL = analogRead(A1);
+     int sensorBR = analogRead(A2);
+     int sensorTR = analogRead(A3);
+
+     int avgT=(sensorTL+sensorTR)/2;
+     int avgB=(sensorBL+sensorBR)/2;
+     int avgL=(sensorTL+sensorBL)/2;
+     int avgR=(sensorTR+sensorBR)/2;
+
+
+      if (avgT > avgB)
+        {
+           UpDown(avgT, avgB);
+        }
+      if(avgT < avgB)
+        {
+          UpDown(avgT, avgB);
+        }
+      if(avgL > avgR) 
+        {
+         LeftRight(avgL, avgR);
+        }
+      if(avgL < avgR) 
+        {
+         LeftRight(avgL, avgR);
+        }
+  
+     delay(10); 
+  }
+
+void UpDown(int avgT, int avgB)
+  {
+  	int pos1= servo1.read();
+
+  	if(avgT < avgB)
+      {
+       	pos1 = --pos1; 
+      }
+  	else
+      {
+        pos1 = ++pos1;
+      }
+  
+    servo1.write(pos1);
+  }
+
+void LeftRight(int avgL, int avgR)
+  {
+    int pos2= servo2.read();
+    if(avgL < avgR)
+      { 
+        pos2 = --pos2;
+      }
+    else
+      {
+        pos2 = pos2 + 1;
+      }
+  
+    servo2.write(pos2);
+  }
